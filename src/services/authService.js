@@ -86,6 +86,21 @@ const authService = {
     return user;
   },
 
+  validateResetToken: async (token) => {
+    const user = await User.findOne({
+      where: {
+        resetPasswordToken: token,
+        resetPasswordExpires: { [Op.gt]: Date.now() },
+      },
+    });
+
+    if (!user) {
+      throw new Error("Invalid or expired reset token");
+    }
+
+    return true;
+  },
+
   changePassword: async (userId, currentPassword, newPassword) => {
     const user = await User.findByPk(userId);
     if (!user) {

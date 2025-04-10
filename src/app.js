@@ -13,6 +13,8 @@ const payrollRoutes = require("./apis/routes/payrollRoute");
 const chatRoutes = require("./apis/routes/chatRoute");
 const leaveRoutes = require("./apis/routes/leaveRoute");
 const prRoutes = require("./apis/routes/prRoute");
+const socket = require("./socket");
+const http = require("http");
 
 const app = express();
 
@@ -23,27 +25,30 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/assets", express.static("src/assets"));
 
 // Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/attendance', attendanceRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/attendance", attendanceRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/project", projectRoutes);
 app.use("/api/task", taskRoutes);
 app.use("/api/project-member", projectMemberRoutes);
-app.use('/api/payroll', payrollRoutes);
-app.use('/api/chat', chatRoutes);
+app.use("/api/payroll", payrollRoutes);
+app.use("/api/chat", chatRoutes);
 
-app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3001',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true
-}));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:3001",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
-app.use('/api/leave', leaveRoutes);
+app.use("/api/leave", leaveRoutes);
 app.use("/api/pr", prRoutes);
 // Connect to databases
 connectMongoDB();
 connetPostgres();
 
-
+const server = http.createServer(app);
+socket.init(server);
 
 module.exports = app;

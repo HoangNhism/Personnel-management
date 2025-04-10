@@ -203,6 +203,18 @@ class UserConroller {
       });
     }
   }
+
+  async getUserFiles(req, res) {
+    try {
+      const files = await userService.getUserFiles(req.params.id);
+      res.status(200).json(files);
+    } catch (error) {
+      res.status(400).json({
+        message: "Failed to get user files",
+        error: error.message,
+      });
+    }
+  }
 }
 
 module.exports = UserConroller;

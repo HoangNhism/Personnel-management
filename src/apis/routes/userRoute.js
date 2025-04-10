@@ -107,6 +107,13 @@ router.get(
   userController.getNotificationsByUser
 );
 
+router.get(
+  "/:id/files",
+  authMiddleware,
+  roleMiddleware(["Admin", "Manager", "Employee", "Account"]),
+  userController.getUserFiles
+);
+
 router.post("/request-password-reset", userController.requestPasswordReset);
 
 router.post("/reset-password", userController.resetPassword);

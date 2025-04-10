@@ -2,6 +2,8 @@ const { Sequelize } = require("sequelize"); // Import Sequelize
 const User = require("../models/User");
 const EmployeeDocument = require("../models/EmployeeDocument");
 
+const CDN_URL = "http://localhost:4000";
+
 const userService = {
   createUser: async (userData) => {
     const user = await User.create(userData);
@@ -217,6 +219,14 @@ const userService = {
     user.status = "Active";
     await user.save();
     return user;
+  },
+
+  getUserFiles: async (userId) => {
+    const response = await fetch(`${CDN_URL}/documents/${userId}`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch user files from CDN");
+    }
+    return await response.json();
   },
 };
 
